@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coco Editz — Video Editing Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #0a0a0f;
+      --off:    #111118;
+      --panel:  #16161f;
+      --border: #2a2a38;
+      --gold:   #d4a24c;
+      --gold2:  #f0c876;
+      --mist:   #a0a0b8;
+      --white:  #f0f0f5;
+      --red:    #c0392b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+    }
+    .nav-logo span { color: var(--white); }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      text-decoration: none; color: var(--mist);
+      font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grain {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.6;
+    }
+    /* Cinematic bars */
+    .bar-top, .bar-bot {
+      position: absolute; left: 0; right: 0; height: 70px;
+      background: #000; pointer-events: none;
+    }
+    .bar-top { top: 64px; }
+    .bar-bot { bottom: 0; }
+
+    .hero-eyebrow {
+      font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 9rem);
+      line-height: 0.92;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+    .hero-title .accent { color: var(--gold); }
+    .hero-sub {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--mist);
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      margin-top: 24px;
+      max-width: 520px;
+    }
+    .hero-tagline {
+      font-size: 0.88rem; letter-spacing: 0.06em;
+      color: var(--white); margin-top: 14px;
+      opacity: 0.75; max-width: 460px;
+    }
+    .hero-cta {
+      margin-top: 48px;
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    }
+    .btn-primary {
+      padding: 14px 36px;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      border: none; cursor: pointer; transition: background 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { background: var(--gold2); }
+    .btn-outline {
+      padding: 13px 36px;
+      background: transparent;
+      color: var(--white);
+      font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      border: 1px solid var(--border); cursor: pointer; transition: border-color 0.2s, color 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── ABOUT STRIP ── */
+    #about {
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 40px;
+      display: flex; align-items: center; justify-content: center; gap: 80px;
+      flex-wrap: wrap; text-align: center;
+    }
+    .stat-block .num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.2rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-block .lbl {
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--mist); margin-top: 4px;
+    }
+    .about-copy {
+      max-width: 480px; color: var(--mist); font-size: 0.93rem;
+      border-left: 2px solid var(--gold);
+      padding-left: 20px; text-align: left;
+    }
+    .about-copy strong { color: var(--white); }
+
+    /* ── SECTION WRAPPER ── */
+    section { padding: 96px 40px; }
+    .section-label {
+      font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1;
+      letter-spacing: 0.04em;
+    }
+    .section-desc {
+      color: var(--mist); font-size: 0.9rem;
+      max-width: 520px; margin-top: 10px;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--ink); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2px; margin-top: 56px;
+    }
+    .service-card {
+      background: var(--panel);
+      padding: 40px 36px;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      transition: border-color 0.25s;
+      cursor: default;
+    }
+    .service-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: var(--gold);
+      transform: scaleY(0); transform-origin: bottom;
+      transition: transform 0.3s ease;
+    }
+    .service-card:hover { border-color: var(--gold); }
+    .service-card:hover::before { transform: scaleY(1); }
+    .service-icon {
+      width: 44px; height: 44px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 20px;
+      transition: border-color 0.25s;
+    }
+    .service-card:hover .service-icon { border-color: var(--gold); }
+    .service-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.55rem; letter-spacing: 0.06em; margin-bottom: 10px;
+    }
+    .service-desc { color: var(--mist); font-size: 0.85rem; line-height: 1.65; }
+    .service-tag {
+      display: inline-block; margin-top: 18px;
+      font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid rgba(212,162,76,0.3);
+      padding: 4px 10px;
+    }
+
+    /* ── PORTFOLIO ── */
+    #portfolio { background: var(--off); }
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px; margin-top: 56px;
+    }
+    .portfolio-item {
+      position: relative; overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      aspect-ratio: 16/9;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.25s;
+    }
+    .portfolio-item:hover { border-color: var(--gold); }
+    .video-item iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+    .video-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+      padding: 28px 16px 12px;
+      display: flex; flex-direction: column; gap: 2px;
+      pointer-events: none;
+    }
+    .video-label .p-type {
+      font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold);
+    }
+    .video-label .p-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem; letter-spacing: 0.06em; color: var(--white);
+    }
+
+    /* ── PROCESS ── */
+    #process { background: var(--ink); }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 40px; margin-top: 56px;
+    }
+    .step { position: relative; }
+    .step-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4rem; color: var(--border); line-height: 1;
+      margin-bottom: 10px;
+    }
+    .step-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; }
+    .step-desc { color: var(--mist); font-size: 0.84rem; }
+    .step::after {
+      content: '';
+      position: absolute; top: 28px; left: 50px; right: -20px; height: 1px;
+      background: linear-gradient(to right, var(--border), transparent);
+    }
+    .step:last-child::after { display: none; }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+    }
+    .contact-inner {
+      max-width: 600px; margin: 0 auto; text-align: center;
+    }
+    .contact-inner .section-title { font-size: clamp(2rem, 5vw, 3.5rem); }
+    .contact-inner p {
+      color: var(--mist); font-size: 0.9rem; margin-top: 14px;
+    }
+    .contact-form {
+      margin-top: 40px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .contact-form input,
+    .contact-form textarea,
+    .contact-form select {
+      background: var(--ink); border: 1px solid var(--border);
+      color: var(--white); padding: 14px 18px;
+      font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      width: 100%; outline: none;
+      transition: border-color 0.2s;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus,
+    .contact-form select:focus { border-color: var(--gold); }
+    .contact-form textarea { resize: vertical; min-height: 120px; }
+    .contact-form select option { background: var(--off); }
+    .contact-form .row { display: flex; gap: 14px; }
+    .contact-form .row > * { flex: 1; }
+    .submit-btn {
+      background: var(--gold); color: var(--ink);
+      padding: 15px; font-weight: 600; font-size: 0.82rem;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      border: none; cursor: pointer; transition: background 0.2s;
+    }
+    .submit-btn:hover { background: var(--gold2); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      border-top: 1px solid var(--border);
+      padding: 32px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem; letter-spacing: 0.12em; color: var(--gold);
+    }
+    .footer-logo span { color: var(--mist); }
+    .footer-copy { font-size: 0.75rem; color: var(--border); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a {
+      font-size: 0.75rem; color: var(--mist); text-decoration: none;
+      letter-spacing: 0.08em; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 680px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      section { padding: 72px 20px; }
+      #about { padding: 48px 20px; gap: 40px; }
+      footer { flex-direction: column; text-align: center; }
+      .contact-form .row { flex-direction: column; }
+      .step::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Coco <span>Editz</span></div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#portfolio">Work</a>
+    <a href="#process">Process</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grain"></div>
+  <div class="bar-top"></div>
+  <p class="hero-eyebrow">Professional Video Editing Team</p>
+  <h1 class="hero-title">
+    COCO<br><span class="accent">EDITZ</span>
+  </h1>
+  <p class="hero-sub">Where every frame is crafted with intention — tailored edits, built by a team that lives in the timeline.</p>
+  <p class="hero-tagline">We have video editors tailored for your content — because your vision deserves the best.</p>
+  <div class="hero-cta">
+    <a href="#portfolio" class="btn-primary">View Our Work</a>
+    <a href="#contact" class="btn-outline">Start a Project</a>
+  </div>
+  <div class="bar-bot"></div>
+</section>
+
+<!-- ABOUT STRIP -->
+<div id="about">
+  <div class="stat-block reveal">
+    <div class="num">5+</div>
+    <div class="lbl">Edit Styles</div>
+  </div>
+  <div class="about-copy reveal">
+    <strong>Coco Editz</strong> is a dedicated team of editors obsessed with one thing — getting the best possible results for your video. Whether you need faith-filled Christian content, razor-sharp velocity edits, or polished business visuals, our team delivers.
+  </div>
+  <div class="stat-block reveal">
+    <div class="num">100%</div>
+    <div class="lbl">Tailored Results</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label reveal">What We Do</div>
+  <h2 class="section-title reveal">Our Edit Styles</h2>
+  <p class="section-desc reveal">Every project gets the full attention of our team — matched to the edit style that serves your vision best.</p>
+
+  <div class="services-grid">
+
+    <div class="service-card reveal">
+      <div class="service-icon">✝️</div>
+      <div class="service-name">Christian Content</div>
+      <div class="service-desc">Faith-centered edits crafted with reverence and purpose. Scripture overlays, worship visuals, sermon highlights — content that moves hearts.</div>
+      <span class="service-tag">Faith · Worship · Ministry</span>
+    </div>
+
+
+    <div class="service-card reveal">
+      <div class="service-icon">Aa</div>
+      <div class="service-name">Typography Edits</div>
+      <div class="service-desc">Words as visuals. Animated type, kinetic text, and expressive lettering woven into your footage to amplify every message.</div>
+      <span class="service-tag">Kinetic · Lyric · Animated Text</span>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-icon">📊</div>
+      <div class="service-name">Business & Educational</div>
+      <div class="service-desc">Clean, professional edits for brands, coaches, and educators. Tutorials, ads, explainers — polished content that builds trust and drives results.</div>
+      <span class="service-tag">Brand · Tutorial · Ad</span>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-icon">🎬</div>
+      <div class="service-name">Cinematic Edits</div>
+      <div class="service-desc">Film-grade colour grading, atmospheric transitions, and cinematic storytelling that makes any video feel like a movie.</div>
+      <span class="service-tag">Film · Colour Grade · Narrative</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="section-label reveal">Our Work</div>
+  <h2 class="section-title reveal">Portfolio</h2>
+  <p class="section-desc reveal">Videos coming soon — each slot below is reserved for a real project from our team.</p>
+
+  <div class="portfolio-grid">
+
+    <div class="portfolio-item video-item reveal">
+      <iframe src="https://drive.google.com/file/d/1P1f9HrljWWL7WfCRAhyAi4AYhCw3iT74/preview" allow="autoplay" allowfullscreen></iframe>
+      <div class="video-label">
+        <span class="p-type">Cinematic Typography</span>
+        <span class="p-title">Cinematic Typography Edit</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item video-item reveal">
+      <iframe src="https://drive.google.com/file/d/1JOiwOYCHMXMRVBxyAhxDBy_qu59WAgoO/preview" allow="autoplay" allowfullscreen></iframe>
+      <div class="video-label">
+        <span class="p-type">Podcast</span>
+        <span class="p-title">Podcast Edit</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item video-item reveal">
+      <iframe src="https://drive.google.com/file/d/1M2uJYIld3MWTVk1EXVaXZW6m15xdPhPj/preview" allow="autoplay" allowfullscreen></iframe>
+      <div class="video-label">
+        <span class="p-type">Documentary</span>
+        <span class="p-title">Shorts Documentary</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item video-item reveal">
+      <iframe src="https://drive.google.com/file/d/1hNHpM7vU13vNaJehQN02MkvWpxCNUdUV/preview" allow="autoplay" allowfullscreen></iframe>
+      <div class="video-label">
+        <span class="p-type">Christian Content</span>
+        <span class="p-title">Christian Content Edit</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item video-item reveal">
+      <iframe src="https://drive.google.com/file/d/1595LoxtsiJGa4ZEs-Zqz3eVGRnpcB71s/preview" allow="autoplay" allowfullscreen></iframe>
+      <div class="video-label">
+        <span class="p-type">Business / Educational</span>
+        <span class="p-title">Explainer Video 1</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item video-item reveal">
+      <iframe src="https://drive.google.com/file/d/1ekGak1PpWGgcunAnTAVGorZKkr8w4PXw/preview" allow="autoplay" allowfullscreen></iframe>
+      <div class="video-label">
+        <span class="p-type">Business / Educational</span>
+        <span class="p-title">Explainer Video 2</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-label reveal">How It Works</div>
+  <h2 class="section-title reveal">Our Process</h2>
+  <p class="section-desc reveal">Simple, transparent, and built around your vision.</p>
+
+  <div class="process-steps">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div class="step-title">Brief & Vision</div>
+      <div class="step-desc">Tell us about your project — the vibe, platform, audience, and any references that inspire you.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <div class="step-title">Team Assignment</div>
+      <div class="step-desc">We match your project to the editor on our team best suited to your edit style and goals.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <div class="step-title">Edit & Craft</div>
+      <div class="step-desc">Our editor works the timeline — cuts, colour, motion, sound — until every frame earns its place.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">04</div>
+      <div class="step-title">Review & Refine</div>
+      <div class="step-desc">You review a draft and we refine until it's exactly right. No guesswork, just results.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">05</div>
+      <div class="step-title">Final Delivery</div>
+      <div class="step-desc">Export-ready files delivered in the format and resolution your platform demands.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label reveal">Get in Touch</div>
+    <h2 class="section-title reveal">Start Your Project</h2>
+    <p class="reveal">Ready for edits that actually hit? Tell us what you need and our team will get back to you.</p>
+
+    <div class="contact-form">
+      <div class="row">
+        <input type="text" placeholder="Your Name" />
+        <input type="email" placeholder="Email Address" />
+      </div>
+      <select>
+        <option value="" disabled selected>Select Edit Style</option>
+        <option>Christian Content</option>
+        <option>Velocity Edit</option>
+        <option>Typography Edit</option>
+        <option>Business / Educational Content</option>
+        <option>Cinematic Edit</option>
+        <option>Not Sure — Help Me Decide</option>
+      </select>
+      <textarea placeholder="Tell us about your project — platform, vibe, deadline, references…"></textarea>
+      <button class="submit-btn">Send Message →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Coco <span>Editz</span></div>
+  <div class="footer-copy">© 2026 Coco Editz. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#portfolio">Work</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
